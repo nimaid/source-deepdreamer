@@ -11,3 +11,7 @@ This is a little script that uses TensorFlow (not Caffe!) to deep dream all the 
 
 Yay! Now just copy the 'materials' folder to the base folder for your game (such as the `hl2` folder where `media`, `models`, etc. live).
 Pray and start the game.
+
+You can also pass `out_folder` and `iter_n` arguments to `random_deepdream_folder`
+* `out_folder` lets you manually choose a folder path to save to.
+* `iter_n` changes how many iterations of dreaming it does. Default is 10, more means trippier, but takes more time to process.
