@@ -1,4 +1,4 @@
-# Steep Soource games in LSD!
+# Steep Source games in LSD!
 
 This is a little script that uses TensorFlow (not Caffe!) to deep dream all the textures in a folder, while skipping functional textures like normal, exponent, and occlusion maps.
 
