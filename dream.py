@@ -1,11 +1,11 @@
 from __future__ import print_function
-from io import BytesIO
+
 import numpy as np
 import PIL.Image
 
 import tensorflow as tf
 
-import random
+import random, os
 
 model_fn = 'tensorflow_inception_graph.pb'
 # creating TensorFlow session and loading the model
@@ -67,8 +67,14 @@ def calc_grad_tiled(img, t_grad, tile_size=512):
 
 def open_pic(pic_name):
     pic = PIL.Image.open(pic_name)
-    pic = np.float32(pic)
     return pic
+
+def pic_to_array(pic):
+    return np.float32(pic)
+
+def open_pic_as_array(pic_name):
+    pic = open_pic(pic_name)
+    return pic_to_array(pic)
 
 def render_deepdream(t_obj, img0=img_noise,
                      iter_n=10, step=1.5, octave_n=4, octave_scale=1.4):
@@ -93,7 +99,7 @@ def render_deepdream(t_obj, img0=img_noise,
         for i in range(iter_n):
             g = calc_grad_tiled(img, t_grad)
             img += g*(step / (np.abs(g).mean()+1e-7))
-            print('.',end = ' ')
+            print('.',end = '')
         print('Octave {}/{} done.'.format(octave + 1, octave_n))
     
     final_pic = array_to_img(img/255.0)
@@ -105,3 +111,35 @@ def random_deepdream(img=img_noise,
     t_obj = tf.square(T(layer_name))
     return render_deepdream(t_obj, img, iter_n, step, octave_n, octave_scale)
     
+def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
+    if out_folder == None:
+        out_folder = in_folder + '_dreamed'
+
+    in_folder = os.path.normpath(in_folder)
+    out_folder = os.path.normpath(out_folder)
+    
+    for root, dirs, files in os.walk(in_folder):
+        for name in files:
+            open_path = os.path.join(root, name)
+            
+            save_root = root.replace(in_folder, out_folder)
+                
+            save_path = os.path.join(save_root, name)
+
+            save_dir = os.path.dirname(save_path)
+                
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+
+            if os.path.exists(save_path):
+                print('Skipped already dreamed file "{}"'.format(save_path))
+            elif "_normal" not in name:
+                temp_img = open_pic_as_array(open_path)
+
+                temp_dream = random_deepdream(temp_img, iter_n=iter_n)
+
+                temp_dream.save(save_path)
+                print('Dreamed "{}" to "{}"'.format(open_path, save_path))
+            else:
+                open_pic(open_path).save(save_path)
+                print('Coppied unmodified normal file "{}"'.format(open_path))
