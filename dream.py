@@ -143,9 +143,13 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
                 open_pic(open_path).save(save_path)
                 print('Coppied unmodified occlusion file "{}"'.format(open_path))
             else:
-                temp_img = open_pic_as_array(open_path)
+                try:
+                    temp_img = open_pic_as_array(open_path)
 
-                temp_dream = random_deepdream(temp_img, iter_n=iter_n)
+                    temp_dream = random_deepdream(temp_img, iter_n=iter_n)
 
-                temp_dream.save(save_path)
-                print('Dreamed "{}" to "{}"'.format(open_path, save_path))
+                    temp_dream.save(save_path)
+                    print('Dreamed "{}" to "{}"'.format(open_path, save_path))
+                except:
+                    open_pic(open_path).save(save_path)
+                    print('ERROR: File not modified. Coppied unmodified file "{}"'.format(open_path))
