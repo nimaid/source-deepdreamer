@@ -133,13 +133,19 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
 
             if os.path.exists(save_path):
                 print('Skipped already dreamed file "{}"'.format(save_path))
-            elif "_normal" not in name:
+            elif "_normal" in name:
+                open_pic(open_path).save(save_path)
+                print('Coppied unmodified normal file "{}"'.format(open_path))
+            elif "_exponent" in name:
+                open_pic(open_path).save(save_path)
+                print('Coppied unmodified exponent file "{}"'.format(open_path))
+            elif "_occlusion" in name:
+                open_pic(open_path).save(save_path)
+                print('Coppied unmodified occlusion file "{}"'.format(open_path))
+            else:
                 temp_img = open_pic_as_array(open_path)
 
                 temp_dream = random_deepdream(temp_img, iter_n=iter_n)
 
                 temp_dream.save(save_path)
                 print('Dreamed "{}" to "{}"'.format(open_path, save_path))
-            else:
-                open_pic(open_path).save(save_path)
-                print('Coppied unmodified normal file "{}"'.format(open_path))
