@@ -131,19 +131,21 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
 
-            if os.path.exists(save_path):
-                print('Skipped already dreamed file "{}"'.format(save_path))
-            elif "_normal" in name:
+            special = None
+            for special_type in ['normal', 'exponent', 'occlusion', 'mask', 'phong']:
+                if special_type + os.path.splitext(name)[1] in name:
+                    special = special_type
+                    break
+
+            print('Processing image "{}"'.format(open_path))
+            
+            if special != None:
                 open_pic(open_path).save(save_path)
-                print('Coppied unmodified normal file "{}"'.format(open_path))
-            elif "_exponent" in name:
-                open_pic(open_path).save(save_path)
-                print('Coppied unmodified exponent file "{}"'.format(open_path))
-            elif "_occlusion" in name:
-                open_pic(open_path).save(save_path)
-                print('Coppied unmodified occlusion file "{}"'.format(open_path))
+                print('Coppied unmodified {} image to "{}"'.format(special, open_path))
+            elif os.path.exists(save_path):
+                print('Skipped already dreamed image "{}"'.format(save_path))
             else:
-                print('Dreaming up file "{}"'.format(open_path))
+                print('Dreaming about the image...')
                 try:
                     temp_img = open_pic_as_array(open_path)
 
@@ -158,5 +160,7 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
                     return
                 except:
                     open_pic(open_path).save(save_path)
-                    print('ERROR: File not modified. Coppied unmodified file to "{}"'.format(open_path))
+                    print('ERROR: Image not modified. Coppied unmodified image to "{}"'.format(open_path))
             print("")
+
+random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\hl2_textures_dir_raw_bmp")
