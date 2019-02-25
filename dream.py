@@ -132,7 +132,7 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
                 os.makedirs(save_dir)
 
             special = None
-            for special_type in ['normal', 'exponent', 'occlusion', 'mask', 'phong']:
+            for special_type in ['normal', 'exponent', 'occlusion', 'mask', 'phong', 'dudv']:
                 if special_type + os.path.splitext(name)[1] in name:
                     special = special_type
                     break
