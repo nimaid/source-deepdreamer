@@ -5,7 +5,7 @@ import PIL.Image
 
 import tensorflow as tf
 
-import random, os, shutil
+import random, os
 
 model_fn = 'tensorflow_inception_graph.pb'
 # creating TensorFlow session and loading the model
@@ -136,8 +136,7 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
             print('Processing image "{}"'.format(open_path))
             
             if special != None:
-                open_pic(open_path).save(save_path)
-                print('Coppied unmodified {} image to "{}"'.format(special, open_path))
+                print('Skipped {} image.'.format(special))
             elif os.path.exists(save_path):
                 print('Skipped already dreamed image "{}"'.format(save_path))
             else:
@@ -162,11 +161,11 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
                     print("Stopping conversion...")
                     return
                 except tf.errors.InvalidArgumentError:
-                    shutil.copyfile(open_path, save_path)
-                    print('ERROR: Image probably too small Coppied unmodified image to "{}"'.format(open_path))
+                    print('ERROR: Image probably too small.')
                 except:
                     shutil.copyfile(open_path, save_path)
-                    print('ERROR: Unknown file error. Coppied unmodified file to "{}"'.format(open_path))
-            print("")
+                    print('ERROR: Unknown file error.')
+            print('')
+    print('All dreams done!')
 
 random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\hl2_textures_dir_png_test", iter_n=15)
