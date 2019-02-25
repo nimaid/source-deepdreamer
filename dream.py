@@ -5,7 +5,7 @@ import PIL.Image
 
 import tensorflow as tf
 
-import random, os
+import random, os, shutil
 
 model_fn = 'tensorflow_inception_graph.pb'
 # creating TensorFlow session and loading the model
@@ -72,10 +72,6 @@ def open_pic(pic_name):
 def pic_to_array(pic):
     return np.float32(pic)
 
-def open_pic_as_array(pic_name):
-    pic = open_pic(pic_name)
-    return pic_to_array(pic)
-
 def render_deepdream(t_obj, img0=img_noise,
                      iter_n=10, step=1.5, octave_n=4, octave_scale=1.4):
     t_score = tf.reduce_mean(t_obj) # defining the optimization objective
@@ -110,7 +106,7 @@ def random_deepdream(img=img_noise,
     layer_name = random.choice(layer_names)
     t_obj = tf.square(T(layer_name))
     return render_deepdream(t_obj, img, iter_n, step, octave_n, octave_scale)
-    
+
 def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
     if out_folder == None:
         out_folder = in_folder + '_dreamed'
@@ -132,7 +128,7 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
                 os.makedirs(save_dir)
 
             special = None
-            for special_type in ['normal', 'exponent', 'occlusion', 'mask', 'phong', 'dudv']:
+            for special_type in ['normal', 'exponent', 'occlusion', 'mask', 'phong', 'dudv', 'spec']:
                 if special_type + os.path.splitext(name)[1] in name:
                     special = special_type
                     break
@@ -147,20 +143,30 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
             else:
                 print('Dreaming about the image...')
                 try:
-                    temp_img = open_pic_as_array(open_path)
+                    temp_img = open_pic(open_path)
 
-                    temp_dream = random_deepdream(temp_img, iter_n=iter_n)
+                    alpha = None
+                    if len(temp_img.getbands()) == 4:
+                        alpha = list(temp_img.split())[3]
+                        temp_img = PIL.Image.merge('RGB', list(temp_img.split())[:3])
+                        
+                    temp_img = random_deepdream(pic_to_array(temp_img), iter_n=iter_n)
 
-                    temp_dream.save(save_path)
+                    if alpha != None:
+                        temp_img = PIL.Image.merge('RGBA', list(temp_img.split()) + [alpha])
+                    
+                    temp_img.save(save_path)
                     del temp_img
-                    del temp_dream
                     print('Dreamed to "{}"'.format(save_path))
                 except KeyboardInterrupt:
                     print("Stopping conversion...")
                     return
+                except tf.errors.InvalidArgumentError:
+                    shutil.copyfile(open_path, save_path)
+                    print('ERROR: Image probably too small Coppied unmodified image to "{}"'.format(open_path))
                 except:
-                    open_pic(open_path).save(save_path)
-                    print('ERROR: Image not modified. Coppied unmodified image to "{}"'.format(open_path))
+                    shutil.copyfile(open_path, save_path)
+                    print('ERROR: Unknown file error. Coppied unmodified file to "{}"'.format(open_path))
             print("")
 
-random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\hl2_textures_dir_raw_bmp")
+random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\hl2_textures_dir_png_test", iter_n=15)
