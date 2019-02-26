@@ -36,3 +36,5 @@ def scramble_folder(in_folder, out_folder=None):
         num_files += 1
         if num_files % 10 == 0:
             print('{}/{}'.format(num_files, total_files))
+
+scramble_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Sound Scramble\\hl2_sound_scramble")

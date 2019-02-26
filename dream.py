@@ -172,7 +172,7 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
                     shutil.copyfile(open_path, save_path)
                     print('ERROR: Unknown file error.')
             files_done += 1
-            print('File {}/{} processed.\n'.format(files_done, num_files))
+            print('File {}/{} processed. ({}% complete)\n'.format(files_done, num_files, round((files_done / num_files) * 100, 1)))
     print('All dreams done!')
 
 random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\hl2_textures_dir_png", iter_n=30)
