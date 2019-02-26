@@ -7,6 +7,8 @@ import tensorflow as tf
 
 import random, os
 
+VERBOSE = False
+
 model_fn = 'tensorflow_inception_graph.pb'
 # creating TensorFlow session and loading the model
 graph = tf.Graph()
@@ -139,14 +141,23 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
                     special = special_type
                     break
 
-            print('Processing image "{}"'.format(open_path))
+            files_done += 1
+            end_msg = 'File {}/{} processed. ({}% complete)\n'.format(files_done, num_files, round((files_done / num_files) * 100, 1))
+            
+            if VERBOSE:
+                print('Processing image "{}"'.format(open_path))
             
             if special != None:
-                print('Skipped {} image.'.format(special))
+                if VERBOSE:
+                    print('Skipped {} image'.format(special))
             elif os.path.exists(save_path):
-                print('Skipped already dreamed image "{}"'.format(save_path))
+                if VERBOSE:
+                    print('Skipped already dreamed image "{}"'.format(save_path))
             else:
-                print('Dreaming about the image...')
+                if not VERBOSE:
+                    print('Dreaming about "{}"...'.format(open_path))
+                else:
+                    print('Dreaming about the image...')
                 try:
                     temp_img = open_pic(open_path)
 
@@ -171,8 +182,11 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
                 except:
                     shutil.copyfile(open_path, save_path)
                     print('ERROR: Unknown file error.')
-            files_done += 1
-            print('File {}/{} processed. ({}% complete)\n'.format(files_done, num_files, round((files_done / num_files) * 100, 1)))
+                if not VERBOSE:
+                    print(end_msg)
+            
+            if VERBOSE:
+                print(end_msg)
     print('All dreams done!')
 
 random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\hl2_textures_dir_png", iter_n=30)
