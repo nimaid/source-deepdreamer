@@ -101,6 +101,9 @@ def render_deepdream(t_obj, img0=img_noise,
     final_pic = array_to_img(img/255.0)
     return final_pic
 
+def files_in_subdirs(in_folder):
+    return sum([len(files) for r, d, files in os.walk(in_folder)])
+
 def random_deepdream(img=img_noise,
                      iter_n=10, step=1.5, octave_n=4, octave_scale=1.4):
     layer_name = random.choice(layer_names)
@@ -114,7 +117,7 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
     in_folder = os.path.normpath(in_folder)
     out_folder = os.path.normpath(out_folder)
 
-    num_files = sum([len(files) for r, d, files in os.walk(in_folder)])
+    num_files = files_in_subdirs(in_folder)
     files_done = 0
     
     for root, dirs, files in os.walk(in_folder):
