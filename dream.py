@@ -113,6 +113,9 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
 
     in_folder = os.path.normpath(in_folder)
     out_folder = os.path.normpath(out_folder)
+
+    num_files = sum([len(files) for r, d, files in os.walk(in_folder)])
+    files_done = 0
     
     for root, dirs, files in os.walk(in_folder):
         for name in files:
@@ -158,14 +161,15 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
                     del temp_img
                     print('Dreamed to "{}"'.format(save_path))
                 except KeyboardInterrupt:
-                    print("Stopping conversion...")
+                    print("HALT: Stopped conversion.")
                     return
                 except tf.errors.InvalidArgumentError:
                     print('ERROR: Image probably too small.')
                 except:
                     shutil.copyfile(open_path, save_path)
                     print('ERROR: Unknown file error.')
-            print('')
+            files_done += 1
+            print('File {}/{} processed.\n'.format(files_done, num_files))
     print('All dreams done!')
 
-random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\hl2_textures_dir_png_test", iter_n=15)
+random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\hl2_textures_dir_png", iter_n=30)
