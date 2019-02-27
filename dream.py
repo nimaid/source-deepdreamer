@@ -21,6 +21,15 @@ imagenet_mean = 117.0
 t_preprocessed = tf.expand_dims(t_input-imagenet_mean, 0)
 tf.import_graph_def(graph_def, {'input':t_preprocessed})
 
+# mixed4e - crocodile fish
+# mixed4b - human dog
+# mixed3a - square spirals
+# mixed4a - sloth dog eyes
+# mixed5a - fish peacocks
+# mixed3b - swirly whooshy eyes and square spirals
+# mixed5b - reptile melt
+# mixed4d - fishmosh
+# mixed4c - fish melt
 layer_names = ['mixed5b', 'mixed5a', 'mixed4e', 'mixed4d', 'mixed4c', 'mixed4b', 'mixed4a', 'mixed3b', 'mixed3a']
 
 img_noise = np.random.uniform(size=(224,224,3)) + 100.0
@@ -109,6 +118,7 @@ def files_in_subdirs(in_folder):
 def random_deepdream(img=img_noise,
                      iter_n=10, step=1.5, octave_n=4, octave_scale=1.4):
     layer_name = random.choice(layer_names)
+    #print(layer_name)
     t_obj = tf.square(T(layer_name))
     return render_deepdream(t_obj, img, iter_n, step, octave_n, octave_scale)
 
