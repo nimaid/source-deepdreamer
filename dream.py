@@ -21,15 +21,15 @@ imagenet_mean = 117.0
 t_preprocessed = tf.expand_dims(t_input-imagenet_mean, 0)
 tf.import_graph_def(graph_def, {'input':t_preprocessed})
 
-# mixed3a - square spirals
-# mixed3b - swirly whooshy eyes and square spirals
-# mixed4a - sloth dog eyes
-# mixed4b - human dog
-# mixed4c - fish melt
-# mixed4d - fishmosh
-# mixed4e - crocodile fish
-# mixed5a - fish peacocks
-# mixed5b - reptile melt
+#layer_names = ['mixed3a'] # square spirals
+#layer_names = ['mixed3b'] # swirly whooshy eyes and square spirals
+#layer_names = ['mixed4a'] # sloth dog eyes
+#layer_names = ['mixed4b'] # human dog
+#layer_names = ['mixed4c'] # fish melt
+#layer_names = ['mixed4d'] # fishmosh
+#layer_names = ['mixed4e'] # crocodile fish
+#layer_names = ['mixed5a'] # fish peacocks
+#layer_names = ['mixed5b'] # reptile melt
 layer_names = ['mixed5b', 'mixed5a', 'mixed4e', 'mixed4d', 'mixed4c', 'mixed4b', 'mixed4a', 'mixed3b', 'mixed3a']
 
 img_noise = np.random.uniform(size=(224,224,3)) + 100.0
@@ -199,4 +199,5 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
                 print(end_msg)
     print('All dreams done!')
 
-random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\hl2_textures_dir_png", iter_n=30)
+random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\hl2_textures_dir_png", iter_n=100)
+#random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\melt", iter_n=100)
