@@ -7,6 +7,8 @@ import tensorflow as tf
 
 import random, os
 
+import shutil
+
 VERBOSE = False
 
 model_fn = 'tensorflow_inception_graph.pb'
@@ -200,4 +202,3 @@ def random_deepdream_folder(in_folder, out_folder=None, iter_n=10):
     print('All dreams done!')
 
 random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\hl2_textures_dir_png", iter_n=100)
-#random_deepdream_folder("C:\\Users\\ellag\\Documents\\HL2 Modding\\Deep Dream\\melt", iter_n=100)
